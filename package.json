@@ -1,11 +1,15 @@
 {
-  "name": "girtodts",
+  "name": "gir-dts-generator",
   "version": "0.1.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A CLI tool using node-gir to generate TypeScript declaration files for GObject libraries",
+  "main": "build/index.js",
+  "bin": {
+    "gir-dts-generator": "build/index.js"
+  },
   "scripts": {
     "start": "ts-node ./src/index.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublish": "npm run build"
   },
   "author": "James Batt",
   "license": "MIT",

@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import ClassDeclaration from './ClassDeclaration';
 import ConstantDeclaration from './ConstantDeclaration';
 import DeclarationFile from './DeclarationFile';
