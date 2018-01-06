@@ -1,6 +1,6 @@
 {
   "name": "gir-dts-generator",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A CLI tool using node-gir to generate TypeScript declaration files for GObject libraries",
   "main": "build/index.js",
   "bin": {
