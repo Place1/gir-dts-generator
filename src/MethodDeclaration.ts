@@ -1,3 +1,4 @@
+import ReturnTypeDeclaration from './ReturnTypeDeclaration';
 import Declaration from "./Declaration";
 import camelCase = require('camelcase');
 import { getTypeInfoName } from "./helpers";
@@ -19,7 +20,7 @@ export default class MethodDeclaration extends Declaration {
 
   toRepresentation() {
     const name = this.info.getName();
-    const returnTypeInfo = GIRepository.callableInfoGetReturnType(this.info);
-    return `${camelCase(name)}(${this.args.join(', ')}): ${getTypeInfoName(returnTypeInfo)};`;
+    const returnTypeName = new ReturnTypeDeclaration(this.info).toRepresentation();
+    return `${camelCase(name)}(${this.args.join(', ')}): ${returnTypeName};`;
   }
 }
