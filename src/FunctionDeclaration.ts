@@ -1,3 +1,4 @@
+import ReturnTypeDeclaration from './ReturnTypeDeclaration';
 import { codeBlock } from "common-tags";
 import camelCase = require('camelcase');
 import Declaration from "./Declaration";
@@ -20,7 +21,7 @@ export default class FunctionDeclaration extends Declaration {
 
   toRepresentation() {
     const name = this.info.getName();
-    const returnTypeName = getTypeInfoName(GIRepository.callableInfoGetReturnType(this.info));
+    const returnTypeName = new ReturnTypeDeclaration(this.info).toRepresentation();
     return `function ${camelCase(name)}(${this.args.join(', ')}): ${returnTypeName};`;
   }
 }
