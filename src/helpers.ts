@@ -8,7 +8,10 @@ const basicNativeTypes = {
   utf8: 'string',
   gunichar: 'string',
   filename: 'string',
+  gint8: 'number',
   guint8: 'number', // byte
+  gint16: 'number',
+  guint16: 'number',
   gint32: 'number',
   guint32: 'number',
   gint64: 'number',
@@ -17,6 +20,7 @@ const basicNativeTypes = {
   gdouble: 'number',
   GType: 'number',
   void: 'void',
+  error: 'Error',
 
   // the following container types probably need
   // something more fancy to type the inner element types.

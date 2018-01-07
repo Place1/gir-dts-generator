@@ -1,6 +1,8 @@
+import { codeBlock } from 'common-tags';
+
+import Declaration from './Declaration';
+import FieldDeclaration from './FieldDeclaration';
 import MethodDeclaration from './MethodDeclaration';
-import Declaration from "./Declaration";
-import { codeBlock } from "common-tags";
 
 const { load } = require('node-gir');
 const GIRepository = load('GIRepository');
@@ -8,7 +10,12 @@ const GIRepository = load('GIRepository');
 export default class StructDeclaration extends Declaration {
 
   get fields() {
-    return [];
+    const fields = [];
+    for (let i = 0; i < GIRepository.structInfoGetNFields(this.info); i++) {
+      const fieldInfo = GIRepository.structInfoGetField(this.info, i);
+      fields.push(new FieldDeclaration(fieldInfo).toRepresentation());
+    }
+    return fields;
   }
 
   get methods() {

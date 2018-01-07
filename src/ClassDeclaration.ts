@@ -36,6 +36,7 @@ export default class ClassDeclaration extends Declaration {
     return codeBlock`
       class ${name} extends ${parent} {
         ${this.properties.join('\n')}
+        ${this.methods.join('\n')}
       }
     `;
   }

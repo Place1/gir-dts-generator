@@ -73,10 +73,10 @@ export default class DeclarationFile {
 
   toRepresentation() {
     const libraryDeclarations = this.declarations.map((declaration) => {
-      return codeBlock`
-        // ${GIRepository.infoTypeToString(declaration.getInfo().getType())}
-        export ${declaration.toRepresentation().trim()}
-      `;
+      return (
+        `// ${GIRepository.infoTypeToString(declaration.getInfo().getType())}\n` +
+        `export ${declaration.toRepresentation().trim()}`
+      );
     });
     const header = `${this.libraryName} ${repo.getVersion(this.libraryName)}`;
     return codeBlock`
