@@ -1,3 +1,4 @@
+import { getTypeInfoName } from './helpers';
 import MethodDeclaration from './MethodDeclaration';
 import { stripIndent, stripIndents, codeBlock } from 'common-tags';
 
@@ -31,10 +32,16 @@ export default class ClassDeclaration extends Declaration {
     const parentInfo = GIRepository.objectInfoGetParent(this.info);
 
     const name = this.info.getName();
-    const parent = parentInfo.getName();
+    let parent;
+    if (parentInfo) {
+      parent = parentInfo.getName();
+      if (parentInfo.getNamespace() !== this.info.getNamespace()) {
+        parent = `${parentInfo.getNamespace()}.${parent}`;
+      }
+    }
 
     return codeBlock`
-      class ${name} extends ${parent} {
+      class ${name}${parent ? ` extends ${parent}` : ''} {
         ${this.properties.join('\n')}
         ${this.methods.join('\n')}
       }

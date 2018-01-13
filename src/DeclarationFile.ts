@@ -1,3 +1,4 @@
+import Namespace from './Namespace';
 import { codeBlock } from 'common-tags';
 
 import ClassDeclaration from './ClassDeclaration';
@@ -10,82 +11,40 @@ import StructDeclaration from './StructDeclaration';
 
 const { load } = require('node-gir');
 const GIRepository = load('GIRepository');
-const repo = new GIRepository.Repository();
 
 export default class DeclarationFile {
 
   private libraryName: string;
-  private libraryVersion: string;
-  private declarations = new Array<Declaration>();
+  private libraryVersion?: string;
+  private repository = new GIRepository.Repository();
+  private namespaces = new Array<Namespace>();
 
   constructor(libraryName: string, libraryVersion?: string) {
     this.libraryName = libraryName;
     this.libraryVersion = libraryVersion;
   }
 
-  build() {
-    repo.require(this.libraryName, this.libraryVersion, 0);
-    for(let i = 0; i <repo.getNInfos('Gtk'); i++) {
-      const info = repo.getInfo('Gtk', i);
-      switch (info.getType()) {
-        case GIRepository.InfoType.OBJECT:
-          this.add(new ClassDeclaration(info));
-          break;
+  getContent() {
+    this.repository.require(this.libraryName, this.libraryVersion, 0);
 
-        case GIRepository.InfoType.ENUM:
-        case GIRepository.InfoType.FLAGS:
-          this.add(new EnumDeclaration(info));
-          break;
-
-        case GIRepository.InfoType.FUNCTION:
-        case GIRepository.InfoType.CALLBACK:
-          this.add(new FunctionDeclaration(info));
-          break;
-
-        case GIRepository.InfoType.STRUCT:
-          this.add(new StructDeclaration(info));
-          break;
-
-        case GIRepository.InfoType.CONSTANT:
-          this.add(new ConstantDeclaration(info));
-          break;
-
-        case GIRepository.InfoType.INTERFACE:
-          this.add(new InterfaceDeclaration(info));
-          break;
-
-        default:
-          console.log(`skipping info '${info.getName()}' with type '${GIRepository.infoTypeToString(info.getType())}'`);
-          break;
-      }
-    }
-  }
-
-  private add(declaration: Declaration) {
-    this.declarations.push(declaration);
-  }
-
-  orderBy(...klasses: Array<any>) {
-    this.declarations.sort((a, b) => {
-      return klasses.indexOf(a.constructor) < klasses.indexOf(b.constructor) ? -1 : 1;
-    });
-  }
-
-  toRepresentation() {
-    const libraryDeclarations = this.declarations.map((declaration) => {
-      return (
-        `// ${GIRepository.infoTypeToString(declaration.getInfo().getType())}\n` +
-        `export ${declaration.toRepresentation().trim()}`
+    const dependencies = this.repository.getDependencies(this.libraryName);
+    const dependentLibraries = dependencies.map((dependency) => dependency.split('-'));
+    console.info(`${this.libraryName} depends on: ${dependentLibraries.map((tuple) => tuple[0]).join(', ')}`);
+    const allLibraries = [[this.libraryName, this.libraryVersion], ...dependentLibraries];
+    const namespaceRepresentations = allLibraries.map(([name, version]) => {
+      const libVersion = version || this.repository.getVersion(name);
+      const libraryNamespace = new Namespace(this.repository, name, libVersion);
+      libraryNamespace.build();
+      libraryNamespace.orderBy(
+        ConstantDeclaration,
+        FunctionDeclaration,
+        ClassDeclaration,
+        InterfaceDeclaration,
+        StructDeclaration,
+        EnumDeclaration,
       );
+      return libraryNamespace.toRepresentation();
     });
-    const header = `${this.libraryName} ${repo.getVersion(this.libraryName)}`;
-    return codeBlock`
-      // ${header.trim()}
-      declare namespace ${this.libraryName} {
-        ${libraryDeclarations.join('\n\n')}
-      }
-    `;
+    return namespaceRepresentations.join('\n\n');
   }
 }
-
-

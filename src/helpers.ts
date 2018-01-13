@@ -49,7 +49,11 @@ export function getTypeInfoName(typeInfo) {
   if (isBasicType(typeTagName)) {
     return toJsBasicType(typeTagName);
   } else {
-    return GIRepository.typeInfoGetInterface(typeInfo).getName();
+    const interfaceInfo = GIRepository.typeInfoGetInterface(typeInfo);
+    if (interfaceInfo.getNamespace() !== typeInfo.getNamespace()) {
+      return `${interfaceInfo.getNamespace()}.${interfaceInfo.getName()}`;
+    }
+    return interfaceInfo.getName();
   }
 }
 

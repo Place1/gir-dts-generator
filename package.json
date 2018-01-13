@@ -13,6 +13,13 @@
   },
   "author": "James Batt",
   "license": "MIT",
+  "dependencies": {
+    "camelcase": "^4.1.0",
+    "commander": "^2.12.2",
+    "common-tags": "^1.6.0",
+    "node-gir": "0.1.5",
+    "uppercamelcase": "^3.0.0"
+  },
   "devDependencies": {
     "@types/camelcase": "^4.1.0",
     "@types/commander": "^2.12.2",
@@ -21,12 +28,5 @@
     "@types/uppercamelcase": "^3.0.0",
     "ts-node": "^3.3.0",
     "typescript": "^2.5.3"
-  },
-  "dependencies": {
-    "camelcase": "^4.1.0",
-    "commander": "^2.12.2",
-    "common-tags": "^1.6.0",
-    "node-gir": "^0.1.4",
-    "uppercamelcase": "^3.0.0"
   }
 }
