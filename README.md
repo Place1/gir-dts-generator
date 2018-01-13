@@ -42,3 +42,7 @@ _not sure yet_
     could probably be a consumer of this tool and use this feature
     https://github.com/Place1/node-gir/issues/8 to automatically type
     popular libraries.
+* Potentially add a flag `--gjs-compat`
+  - this flag would make the tool output GJS compatible declarations.
+    `node-gir` follow's NodeJS's camelCase naming conventions where
+    as GJS uses snake_case.
